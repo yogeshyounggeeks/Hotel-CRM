@@ -29,7 +29,8 @@
                         <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-layout-grid2"></i><span class="hide-menu">Business Owner</span></a>
                             <ul aria-expanded="false" class="collapse">
                                 <!--li><a href="{{route('businessownerList')}}">Business Owner List</a></li-->
-                                <li><a href="{{route('businessownerAdd')}}">Business Owner Add</a></li>
+                                <li><a href="{{route('businessownerAdd')}}">Add Business Owner</a></li>
+                                <li><a href="{{route('businessownerList')}}">Business Owner List</a></li>
                             </ul>
                         </li>
                         <!--li class="nav-small-cap">--- PERSONAL</li>

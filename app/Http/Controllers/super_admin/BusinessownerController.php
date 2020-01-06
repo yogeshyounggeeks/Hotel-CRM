@@ -4,9 +4,17 @@ namespace App\Http\Controllers\super_admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\super_admin\Businessowner;
+use App\super_admin\BusinessOwner;
 use DB;
 use Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Rules\UniqueExceptSelf;
+
+use Hyn\Tenancy\Models\Website;
+use Hyn\Tenancy\Contracts\Repositories\WebsiteRepository;
+
+use Hyn\Tenancy\Models\Hostname;
+use Hyn\Tenancy\Contracts\Repositories\HostnameRepository;
 
 class BusinessownerController extends Controller
 {
@@ -17,8 +25,8 @@ class BusinessownerController extends Controller
      */
     public function index()
     {
-		$data = Businessowner::paginate(10);
-		return view('super_admin.businessowner',$data);
+		$data = BusinessOwner::where('isDeleted' , 0)->paginate(10);
+		return view('super_admin.pages.business-owner.businessowner-list',$data);
 	}
 
     /**
@@ -28,7 +36,7 @@ class BusinessownerController extends Controller
      */
     public function create()
     {
-        return view('super_admin.add-businessowner');
+        return view('super_admin.pages.business-owner.add-businessowner');
     }
 
     /**
@@ -40,17 +48,37 @@ class BusinessownerController extends Controller
     public function store(Request $request)
     {
 		$request->validate([
-            'name' => 'required',
-            'small_description' => 'required',
-			'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'businessname'      => 'string|required',
+            'firstname'         => 'string|required',
+            'lastname'          => 'string|required',
+            'gender'            => 'integer|required|min:1',
+            'subdomain'         => 'required|regex:/(^[A-Za-z0-9-]+$)+/|unique:business_owners',
+            'primary_mobile'    => 'unique:business_owners|digits:10|nullable',
+            'secondary_mobile'  => 'unique:business_owners|digits:10|nullable',
+            'email'             => 'required|email|unique:business_owners',
+            'password'          => 'required|confirmed|min:8',
+            'street'            => 'required',
+            'city'              => 'required',
+            'state'             => 'required',
+            'postal_code'       => 'required|digits:6',
+            'country'           => 'required|integer|min:1',
         ]);
 		unset($request['_token']);
+        unset($request['password_confirmation']);
+        $request['password'] = Hash::make($request['password']);
+        $request['subdomain'] = strtolower(($request['subdomain']));
+        BusinessOwner::create(array_merge($request->all() , ['created_by'=>Auth::user()->id]));
+        $website = new Website;
+        $site = $request['subdomain'];
+        $website->uuid = $site;
+        //$website->managed_by_database_connection = 'system.asia';
+        app(WebsiteRepository::class)->create($website);
 
-        $imageName = time().'.'.$request->image->extension();  
-        $request->image->move(public_path('images/businessowner/'), $imageName);
-		
-        Businessowner::create(array_merge($request->all() , ['created_by'=>Auth::user()->id,'image'=>$imageName]));
-        return redirect()->route('businessownerList')->with('success','Add Successfully.');        //
+        $hostname = new Hostname;
+        $hostname->fqdn = $site.".demo.com" ;
+        $hostname = app(HostnameRepository::class)->create($hostname);
+        app(HostnameRepository::class)->attach($hostname, $website);
+        return redirect()->route('businessownerList')->with('success','Add Successfully.');  
     }
 
     /**
@@ -72,13 +100,12 @@ class BusinessownerController extends Controller
      */
     public function edit($id)
     {
-        $businessowner = Businessowner::find($id);
+        $businessowner = BusinessOwner::find($id);
 		if($businessowner){
-			return view('super_admin.edit-businessowner',compact('businessowner'));
-		}else{
-			with('error','Error.');
-		}		
-        //
+			return view('super_admin.pages.business-owner.edit-businessowner',compact('businessowner'));
+		}
+
+        return redirect()->route('businessownerList')->withErrors('Record Not Found.');
     }
 
     /**
@@ -90,27 +117,34 @@ class BusinessownerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $businessowner = Businessowner::find($id);
-		if($businessowner){
-			
+        
 			$request->validate([
-				'name' => 'required',
-				'small_description' => 'required',
-				'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-			]);
-			
-			if(!empty($request->input('image'))){
-				$imageName = time().'.'.$request->image->extension();  
-				$request->image->move(public_path('images/businessowner/'), $imageName);
-				$businessowner->update(array_merge($request->all() , ['image'=>$imageName]));
-			}else{
-				$businessowner->update($request->all());
-			}
-			
-			return redirect()->route('businessownerList')->with('success','Update Successfully.');        //
-		}else{
-			with('error','Error.');
-		}
+            'firstname'         => 'string|required',
+            'lastname'          => 'string|required',
+            'gender'            => 'integer|required|min:1',
+            'primary_mobile'    => ['digits:10','nullable' , new UniqueExceptSelf(BusinessOwner::class, 'primary_mobile', $request->primary_mobile, $id)],
+            'secondary_mobile'  => ['digits:10','nullable' , new UniqueExceptSelf(BusinessOwner::class, 'secondary_mobile', $request->secondary_mobile, $id)],
+            'email'             => ['required','email',new UniqueExceptSelf(BusinessOwner::class, 'email', $request->email, $id)],
+            'password'          => 'confirmed|min:8|nullable',
+            'street'            => 'required',
+            'city'              => 'required',
+            'state'             => 'required',
+            'postal_code'       => 'required|digits:6',
+            'country'           => 'required|integer|min:1',
+        ]);
+        $businessowner = BusinessOwner::find($id);
+        if($businessowner){
+            unset($request['_token']);
+            unset($request['password_confirmation']);
+            if(isset($request['password']) && $request['password'] == '')
+                unset($request['password']);
+            else
+            $request['password'] = Hash::make($request['password']);
+    		$businessowner->update($request->all());	
+    		return redirect()->route('businessownerList')->with('success','Updated Successfully.'); 
+        }
+
+        return redirect()->back()->withErrors('Record Not Found.');
 		
     }
 
@@ -120,10 +154,30 @@ class BusinessownerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request ,  $id)
     {
-		$businessownerimage = Businessowner::find($id);
-        $businessowner = Businessowner::where('id',$id)->delete();
-		return redirect()->route('businessownerList')->with('success','Delete Successfully.');        //
+		     $request->validate([
+                'isDeleted' => 'required_without:isBlocked|in:1',
+                'isBlocked' => 'required_without:isDeleted|in:1,0',
+            ]);
+
+          $businessowner = BusinessOwner::find($id);
+          if($businessowner){
+            if(isset($request['isDeleted'])){
+                $website = Website::where('uuid' , $businessowner->subdomain)->first();
+                if(!empty($website))
+                {
+                    $website->delete();
+                }
+                $businessowner->delete();
+                return redirect()->route('businessownerList')->with('success','Record Deleted Successfully.');
+            }
+
+            $businessowner->update(['isBlocked'=>$request['isBlocked']]);
+            return redirect()->route('businessownerList')->with('success','Action Performed Successfully.');
+          }
+
+        return redirect()->route('businessownerList')->withErrors('Record Not Found.');
+
     }
 }

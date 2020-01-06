@@ -92,7 +92,7 @@ Route::get('/businessowner-list', 'super_admin\BusinessownerController@index')->
 Route::get('/add-businessowner', 'super_admin\BusinessownerController@create')->name('businessownerAdd');
 Route::get('/edit-businessowner/{id}', 'super_admin\BusinessownerController@edit')->name('businessownerEdit');
 Route::post('/update-businessowner/{id}', 'super_admin\BusinessownerController@update')->name('businessownerUpdate');
-Route::get('/delete-businessowner/{id}', 'super_admin\BusinessownerController@destroy')->name('businessownerDelete');
+Route::get('/update-status-businessowner/{id}', 'super_admin\BusinessownerController@destroy')->name('businessownerUpdateStatus');
 Route::post('/businessowner-store','super_admin\BusinessownerController@store')->name('businessownerStore');
 
 

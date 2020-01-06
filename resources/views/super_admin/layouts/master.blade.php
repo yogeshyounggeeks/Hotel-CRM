@@ -51,5 +51,6 @@
 		@include('super_admin.includes.footer')
     </div>
 	@include('super_admin.includes.script')
+    @yield('script')
 </body>
 </html>
