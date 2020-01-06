@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'system'),
+    'default' => env('DB_CONNECTION', 'mysql'),
 
     /*
     |--------------------------------------------------------------------------
@@ -91,36 +91,6 @@ return [
             'prefix_indexes' => true,
         ],
 
-        'system' => [
-            'driver' => 'mysql',
-            'host' => env('TENANCY_HOST', '127.0.0.1'),
-            'port' => env('TENANCY_PORT', '3306'),
-            'database' => env('TENANCY_DATABASE', 'tenancy'),
-            'username' => env('TENANCY_USERNAME', 'tenancy'),
-            'password' => env('TENANCY_PASSWORD', 'someRandomPassword'),
-            'unix_socket' => env('DB_SOCKET', ''),
-            'charset' => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => '',
-            'strict' => true,
-            'engine' => null,
-        ],
-
-        'tenant' => [
-            'driver' => 'mysql',
-            'host' => env('TENANCY_HOST', '127.0.0.1'),
-            'port' => env('TENANCY_PORT', '3306'),
-            'database' => env('TENANCY_DATABASE', 'tenancy'),
-            'username' => env('TENANCY_USERNAME', 'tenancy'),
-            'password' => env('TENANCY_PASSWORD', 'someRandomPassword'),
-            'unix_socket' => env('DB_SOCKET', ''),
-            'charset' => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => '',
-            'strict' => true,
-            'engine' => null,
-        ],
-
     ],
 
     /*
@@ -149,10 +119,10 @@ return [
 
     'redis' => [
 
-        'client' => env('REDIS_CLIENT', 'phpredis'),
+        'client' => env('REDIS_CLIENT', 'predis'),
 
         'options' => [
-            'cluster' => env('REDIS_CLUSTER', 'redis'),
+            'cluster' => env('REDIS_CLUSTER', 'predis'),
             'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
         ],
 

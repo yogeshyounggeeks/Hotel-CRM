@@ -6,4 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 class Uniquevenue extends Model
 {
     protected $guarded = [];
+	protected $table = 'unique_venues';
 }
