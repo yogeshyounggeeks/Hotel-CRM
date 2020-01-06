@@ -26,6 +26,12 @@
                                 <li><a href="{{route('cityList')}}">Cities</a></li>
                             </ul>
                         </li>
+                        <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-layout-grid2"></i><span class="hide-menu">Business Owner</span></a>
+                            <ul aria-expanded="false" class="collapse">
+                                <!--li><a href="{{route('businessownerList')}}">Business Owner List</a></li-->
+                                <li><a href="{{route('businessownerAdd')}}">Business Owner Add</a></li>
+                            </ul>
+                        </li>
                         <!--li class="nav-small-cap">--- PERSONAL</li>
                         <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="icon-speedometer"></i><span class="hide-menu">Dashboard <span class="badge badge-pill badge-cyan ml-auto">4</span></span></a>
                             <ul aria-expanded="false" class="collapse">
