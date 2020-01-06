@@ -99,7 +99,7 @@ class BusinessController extends Controller
 				'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 			]);
 			
-			if(!empty($request->input('image'))){
+			if(!empty($request->hasFile('image'))){
 				$imageName = time().'.'.$request->image->extension();  
 				$request->image->move(public_path('images/business/'), $imageName);
 				$business->update(array_merge($request->all() , ['image'=>$imageName]));

@@ -88,4 +88,11 @@ Route::get('/delete-city/{id}', 'super_admin\website\CityController@destroy')->n
 Route::post('/city-store','super_admin\website\CityController@store')->name('cityStore');
 
 
+Route::get('/businessowner-list', 'super_admin\BusinessownerController@index')->name('businessownerList');
+Route::get('/add-businessowner', 'super_admin\BusinessownerController@create')->name('businessownerAdd');
+Route::get('/edit-businessowner/{id}', 'super_admin\BusinessownerController@edit')->name('businessownerEdit');
+Route::post('/update-businessowner/{id}', 'super_admin\BusinessownerController@update')->name('businessownerUpdate');
+Route::get('/delete-businessowner/{id}', 'super_admin\BusinessownerController@destroy')->name('businessownerDelete');
+Route::post('/businessowner-store','super_admin\BusinessownerController@store')->name('businessownerStore');
+
 

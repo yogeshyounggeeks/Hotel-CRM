@@ -8,11 +8,11 @@
 			<div class="card-body">
 				<div class="row">
 					<div class="col-md-8">
-						<h4 class="card-title">Banner </h4>
-						<h6 class="card-subtitle">Add Banner Form</h6>
+						<h4 class="card-title">Business </h4>
+						<h6 class="card-subtitle">Add Business Form</h6>
 					</div>
 					<div class="col-md-4">
-						<a href="{{'businessAdd'}}" class="btn btn-info pull-right" style="float:right;"><i class="fa fa-plus"></i> Create New</a>
+						<a href="{{route('businessList')}}" class="btn btn-info pull-right" style="float:right;"><i class="fa fa-angle-left"></i> Back</a>
 					</div>
 				</div>
 

@@ -99,7 +99,7 @@ class CityController extends Controller
 			'price' => 'required',
 		]);
 		if($city){
-			if(!empty($request->input('image'))){
+			if(!empty($request->hasFile('image'))){
 				$imageName = time().'.'.$request->image->extension();  
 				$request->image->move(public_path('images/city/'), $imageName);
 				$city->update(array_merge($request->all() , ['image'=>$imageName]));

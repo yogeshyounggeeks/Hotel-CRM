@@ -17,6 +17,7 @@
     <link href="{{asset('dist/css/style.min.css')}}" rel="stylesheet">
     <!-- Dashboard 1 Page CSS -->
     <link href="{{asset('dist/css/pages/dashboard1.css')}}" rel="stylesheet">
+	<link href="{{asset('dist/css/pages/file-upload.css')}}" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>

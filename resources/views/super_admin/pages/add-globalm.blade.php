@@ -12,7 +12,7 @@
 						<h6 class="card-subtitle">Add Banner Form</h6>
 					</div>
 					<div class="col-md-4">
-						<a href="{{'globalmAdd'}}" class="btn btn-info pull-right" style="float:right;"><i class="fa fa-plus"></i> Create New</a>
+						<a href="{{route('globalmList')}}" class="btn btn-info pull-right" style="float:right;"><i class="fa fa-angle-left"></i> Back</a>
 					</div>
 				</div>
 
